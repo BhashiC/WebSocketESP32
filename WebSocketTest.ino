@@ -4,6 +4,10 @@
 const char* ssid = "Zone_51_2.4G";
 const char* password = "LaNaLaN324";
 
+IPAddress local_IP(192, 168, 1, 100);   // Replace with your desired IP address
+IPAddress gateway(192, 168, 1, 1);      // Replace with your gateway IP address
+IPAddress subnet(255, 255, 255, 0);     // Replace with your subnet mask
+
 WebSocketsServer webSocket = WebSocketsServer(81);
 int ledPin = 5;
 bool ledState = false;
@@ -17,8 +21,17 @@ void setup() {
     delay(1000);
     Serial.println("Connecting to WiFi...");
   }
+  if (!WiFi.config(local_IP, gateway, subnet)) {
+    Serial.println("STA Failed to configure");
+  }
+  
   Serial.println("Connected to WiFi");
-  Serial.println(WiFi.localIP());
+  Serial.println("-----------------");
+  Serial.print("IP Address: "); Serial.println(WiFi.localIP());
+  Serial.print("Mac Address: "); Serial.println(WiFi.macAddress());
+  Serial.print("Wifi Network: "); Serial.println(WiFi.SSID());
+  Serial.print("Wifi Strength(dBm): "); Serial.println(WiFi.RSSI());
+  Serial.println("-----------------");
   
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
